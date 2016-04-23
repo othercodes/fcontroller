@@ -2,16 +2,16 @@
 
 /**
  * Core of the controller
- * @author  <usantisteban@othercode.es>
- * @version 1.1
- * @package FController
+ * @author <usantisteban@othercode.es>
+ * @version 1.0
+ * @package OtherCode\FController\Core
  */
 abstract class Core
 {
     /**
      * Core version
      */
-    const VERSION = 1.2;
+    const VERSION = 1.0;
 
     /**
      * The registry of all modules

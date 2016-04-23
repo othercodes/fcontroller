@@ -2,9 +2,9 @@
 
 /**
  * Access layer for the FController
- * @author  <usantisteban@othercode.es>
+ * @author <usantisteban@othercode.es>
  * @version 1.0 Beta
- * @package FController
+ * @package OtherCode\FController
  */
 class FController extends \OtherCode\FController\Core\Core
 {

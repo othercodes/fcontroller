@@ -2,9 +2,9 @@
 
 /**
  * Custom exception
- * @author  <usantisteban@othercode.es>
+ * @author <usantisteban@othercode.es>
  * @version 1.0 Beta
- * @package FController
+ * @package OtherCode\FController\Exceptions
  */
 class FControllerException extends \Exception
 {
