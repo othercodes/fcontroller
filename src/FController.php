@@ -2,7 +2,7 @@
 
 /**
  * Access layer for the FController
- * @author <usantisteban@othercode.es>
+ * @author Unay Santisteban <usantisteban@othercode.es>
  * @version 1.0 Beta
  * @package OtherCode\FController
  */

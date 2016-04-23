@@ -2,7 +2,7 @@
 
 /**
  * Core of the controller
- * @author <usantisteban@othercode.es>
+ * @author Unay Santisteban <usantisteban@othercode.es>
  * @version 1.0
  * @package OtherCode\FController\Core
  */

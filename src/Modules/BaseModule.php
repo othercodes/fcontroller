@@ -2,7 +2,7 @@
 
 /**
  * Base class of a SCITController module
- * @author  <usantisteban@othercode.es>
+ * @author Unay Santisteban <usantisteban@othercode.es>
  * @version 1.0 Beta
  * @package FController
  */
