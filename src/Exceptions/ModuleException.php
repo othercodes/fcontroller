@@ -8,7 +8,7 @@ namespace OtherCode\FController\Exceptions;
  * @version 1.0 Beta
  * @package OtherCode\FController\Exceptions
  */
-class FControllerException extends \Exception
+class ModuleException extends \Exception
 {
 
 }

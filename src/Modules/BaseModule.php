@@ -1,4 +1,7 @@
-<?php namespace OtherCode\FController\Modules;
+<?php
+
+namespace OtherCode\FController\Modules;
+
 
 /**
  * Base class of a SCITController module
@@ -10,31 +13,66 @@ abstract class BaseModule
 {
 
     /**
-     * Array of libraries
-     * @var array
+     * Available libraries
+     * @var \OtherCode\FController\Components\Libraries
      */
-    private $libraries = array();
+    private $libraries;
 
     /**
-     * @param array $libraries
+     * Shared store space.
+     * @var \OtherCode\FController\Components\Registry
      */
-    public function loadLibraries(Array $libraries)
+    protected $storage;
+
+    /**
+     * Messages queue
+     * @var \OtherCode\FController\Components\Messages
+     */
+    protected $messages;
+
+    /**
+     * Load the libraries into the module if they have
+     * not loaded already
+     * @param \OtherCode\FController\Components\Libraries $libraries
+     * @param \OtherCode\FController\Components\Registry $storage
+     * @param \OtherCode\FController\Components\Messages $messages
+     */
+    public function connect(\OtherCode\FController\Components\Libraries $libraries, \OtherCode\FController\Components\Registry $storage, \OtherCode\FController\Components\Messages $messages)
     {
-        $this->libraries = $libraries;
+        if (!isset($this->libraries)) {
+            $this->libraries = $libraries;
+        }
+
+        if (!isset($this->storage)) {
+            $this->storage = $storage;
+        }
+
+        if (!isset($this->messages)) {
+            $this->messages = $messages;
+        }
     }
 
     /**
      * Provide an access to the common libraries
      * of the controller
-     * @param string $library
+     * @param string $name
      * @return object
      */
-    public function __get($library)
+    public function __get($name)
     {
-        if (array_key_exists($library, $this->libraries)) {
-            return $this->libraries[$library];
-        }
-        return null;
+        $this->libraries->$name;
     }
 
+    /**
+     * Prevent the accidentally library override.
+     * @param string $name
+     * @param mixed $value
+     * @throws \OtherCode\FController\Exceptions\FControllerException
+     */
+    public function __set($name, $value)
+    {
+        if (isset($this->libraries->$name)) {
+            throw new \OtherCode\FController\Exceptions\FControllerException('Invalid library override, the "' . $name . '" property is already in use');
+        }
+    }
 }

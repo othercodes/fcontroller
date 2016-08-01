@@ -1,9 +1,11 @@
-<?php namespace OtherCode\FController\Core;
+<?php
+
+namespace OtherCode\FController\Core;
 
 /**
  * Core of the controller
  * @author Unay Santisteban <usantisteban@othercode.es>
- * @version 1.0
+ * @version 1.1
  * @package OtherCode\FController\Core
  */
 abstract class Core
@@ -11,7 +13,7 @@ abstract class Core
     /**
      * Core version
      */
-    const VERSION = 1.0;
+    const VERSION = 1.1;
 
     /**
      * The registry of all modules
@@ -21,17 +23,34 @@ abstract class Core
 
     /**
      * The registry of all libraries
-     * @var array
+     * @var \OtherCode\FController\Components\Libraries
      */
-    protected $libraries = array(
-        'rest' => '\OtherCode\Rest\Rest'
-    );
+    protected $libraries;
+
+    /**
+     * Shared store space.
+     * @var \OtherCode\FController\Components\Registry
+     */
+    protected $storage;
+
+    /**
+     * Messages queue
+     * @var \OtherCode\FController\Components\Messages
+     */
+    protected $messages;
 
     /**
      * Class constructor
      */
     protected function __construct()
     {
+
+        $this->storage = new \OtherCode\FController\Components\Registry();
+        $this->libraries = new \OtherCode\FController\Components\Libraries(array(
+            'rest' => '\OtherCode\Rest\Rest'
+        ));
+
+        $this->messages = new \OtherCode\FController\Components\Messages();
 
         /**
          * foreach default library we have to
@@ -44,14 +63,14 @@ abstract class Core
              * body of the library is a string we have
              * to replace it with a instance of the library
              */
-            if (is_string($this->libraries[$name])) {
+            if (is_string($this->libraries->$name)) {
 
                 /**
                  * finally we check if the string is actually  a valid class name, if
                  * it is, we create a new instance of the library, otherwise we delete
                  * that entry to avoid malfunctions
                  */
-                unset($this->libraries[$name]);
+                unset($this->libraries->$name);
 
                 if (class_exists($library)) {
                     /**
@@ -78,6 +97,7 @@ abstract class Core
         $name = strtolower($name);
 
         if (!array_key_exists($name, $this->modules)) {
+            $module->connect($this->libraries, $this->storage, $this->messages);
             $this->modules[$name] = $module;
             return true;
         }
@@ -88,12 +108,15 @@ abstract class Core
     /**
      * Un register a module
      * @param $name string
+     * @return boolean
      */
     public function unregisterModule($name)
     {
         if (array_key_exists($name, $this->modules)) {
             unset($this->modules[$name]);
+            return true;
         }
+        return false;
     }
 
     /**
@@ -106,8 +129,8 @@ abstract class Core
     {
         $name = strtolower($name);
 
-        if (!array_key_exists($name, $this->libraries)) {
-            $this->libraries[$name] = $library;
+        if (!isset($this->libraries->$name)) {
+            $this->libraries->$name = $library;
             return true;
         }
         return false;
@@ -115,13 +138,18 @@ abstract class Core
 
     /**
      * Un register a library
-     * @param $key
+     * @param string $name
+     * @return boolean
      */
-    public function unregisterLibrary($key)
+    public function unregisterLibrary($name)
     {
-        if (array_key_exists($key, $this->libraries)) {
-            unset($this->libraries[$key]);
+        $name = strtolower($name);
+
+        if (isset($this->libraries->$name)) {
+            unset($this->libraries->$name);
+            return true;
         }
+        return false;
     }
 
     /**

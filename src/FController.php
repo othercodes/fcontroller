@@ -1,4 +1,6 @@
-<?php namespace OtherCode\FController;
+<?php
+
+namespace OtherCode\FController;
 
 /**
  * Access layer for the FController
@@ -51,8 +53,6 @@ class FController extends \OtherCode\FController\Core\Core
              * and false on error
              */
             $instance = new $module($parameters);
-            $instance->loadLibraries($this->libraries);
-
             $this->registerModule($name, $instance);
         }
         return $this;

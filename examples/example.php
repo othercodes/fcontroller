@@ -7,16 +7,25 @@ require_once "../autoload.php";
 /**
  * Class Dummy
  */
-class Dummy extends \OtherCode\FController\Modules\BaseModule
+class DummyOne extends \OtherCode\FController\Modules\BaseModule
 {
     public function sayHello($name)
     {
-        return "Hello, " . $name . "!";
+        $this->storage->name = $name;
+        $this->messages->addMessage('bla bla');
+        var_dump($this->messages);
+        return "Hello, " . $this->storage->name . "!";
     }
+}
 
-    public function sayGoodBye($name)
+/**
+ * Class Dummy
+ */
+class DummyTwo extends \OtherCode\FController\Modules\BaseModule
+{
+    public function sayGoodBye()
     {
-        return "GoodBye, " . $name . "!";
+        return "GoodBye, " . $this->storage->name . "!";
     }
 }
 
@@ -25,16 +34,17 @@ class Dummy extends \OtherCode\FController\Modules\BaseModule
  * register the modules into it
  */
 $ctrl = \OtherCode\FController\FController::getInstance();
-$ctrl->setModule('dummy', 'OtherCode\Examples\Dummy');
+$ctrl->setModule('dummy1', 'OtherCode\Examples\DummyOne');
+$ctrl->setModule('dummy2', 'OtherCode\Examples\DummyTwo');
 
 try {
 
     $data = array('name' => 'Rick');
 
-    $response = $ctrl->run("dummy.sayHello", $data);
+    $response = $ctrl->run("dummy1.sayHello", $data);
     var_dump($response);
 
-    $response = $ctrl->run("dummy.sayGoodBye", $data);
+    $response = $ctrl->run("dummy2.sayGoodBye");
     var_dump($response);
 
 } catch (\Exception $e) {
