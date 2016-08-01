@@ -60,7 +60,7 @@ abstract class BaseModule
      */
     public function __get($name)
     {
-        $this->libraries->$name;
+        return $this->libraries->$name;
     }
 
     /**
@@ -74,5 +74,7 @@ abstract class BaseModule
         if (isset($this->libraries->$name)) {
             throw new \OtherCode\FController\Exceptions\FControllerException('Invalid library override, the "' . $name . '" property is already in use');
         }
+
+        $this->libraries->$name = $value;
     }
 }

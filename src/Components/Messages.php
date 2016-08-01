@@ -2,6 +2,7 @@
 
 namespace OtherCode\FController\Components;
 
+
 /**
  * Class Messages
  * @package OtherCode\FController\Components
@@ -10,11 +11,12 @@ class Messages extends \OtherCode\FController\Components\Registry
 {
     /**
      * Add a new message to the queue
-     * @param string $message
+     * @param string $text
+     * @param null|string $type
      */
-    public function addMessage($message)
+    public function addMessage($text, $type = null)
     {
-        $this[microtime(true)] = $message;
+        $this->set(null, new \OtherCode\FController\Components\Messages\Message($text, $type));
     }
 
     /**
@@ -22,7 +24,7 @@ class Messages extends \OtherCode\FController\Components\Registry
      */
     public function purge()
     {
-        foreach($this as $index => $message){
+        foreach ($this as $index => $message) {
             unset($this->$index);
         }
     }

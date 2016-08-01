@@ -153,6 +153,15 @@ abstract class Core
     }
 
     /**
+     * Get the message queue
+     * @return \OtherCode\FController\Components\Messages
+     */
+    public function getMessages()
+    {
+        return $this->messages;
+    }
+
+    /**
      * Perform the main call of the module method
      * @param string $path
      * @param mixed|null $data

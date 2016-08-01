@@ -87,34 +87,32 @@ class FController extends \OtherCode\FController\Core\Core
      * Get a new instance of the requested library.
      * @param $library string Library name
      * @return null|object Library instance or false in case of fail.
+     * @deprecated Will be removed on v2
      */
     public function getLibraryNewInstance($library)
     {
-        /**
-         * we check if the requested library exists
-         * if is does we return a new instance of the
-         * the library.
-         */
-        if (array_key_exists($library, $this->libraries)) {
-            return clone $this->libraries[$library];
-        }
-        return null;
+        return $this->getLibraryInstance($library, true);
     }
 
     /**
      * Get a instance of the requested library.
      * @param $library string Library name
+     * @param $new boolean true to get a new instance
      * @return null|object Library instance or false in case of fail.
      */
-    public function getLibraryInstance($library)
+    public function getLibraryInstance($library, $new = false)
     {
         /**
          * we check if the requested library exists
          * if is does we return a new instance of the
          * the library.
          */
-        if (array_key_exists($library, $this->libraries)) {
-            return $this->libraries[$library];
+        if (isset($this->libraries->$library)) {
+            if ($new === true) {
+                return clone $this->libraries->$library;
+            } else {
+                return $this->libraries->$library;
+            }
         }
         return null;
     }

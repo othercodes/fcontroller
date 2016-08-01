@@ -20,7 +20,7 @@ class Registry implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function set($name, $value)
     {
-        $this->registry[strtolower($name)] = $value;
+        $this->__set($name, $value);
     }
 
     /**
@@ -29,10 +29,7 @@ class Registry implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function get($name)
     {
-        if (isset($this->registry[strtolower($name)])) {
-            return $this->registry[strtolower($name)];
-        }
-        return null;
+        return $this->__get($name);
     }
 
     /**
@@ -41,7 +38,11 @@ class Registry implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function __set($name, $value)
     {
-        $this->set($name, $value);
+        if(is_null($name)){
+            $this->registry[] = $value;
+        } else {
+            $this->registry[strtolower($name)] = $value;
+        }
     }
 
     /**
@@ -50,7 +51,27 @@ class Registry implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function __get($name)
     {
-        return $this->get($name);
+        if (isset($this->registry[strtolower($name)])) {
+            return $this->registry[strtolower($name)];
+        }
+        return null;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function __unset($name)
+    {
+        unset($this->registry[strtolower($name)]);
+    }
+
+    /**
+     * @param string $name
+     * @return boolean
+     */
+    public function __isset($name)
+    {
+        return isset($this->registry[strtolower($name)]);
     }
 
     /**
@@ -59,7 +80,7 @@ class Registry implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function offsetGet($offset)
     {
-        return $this->get($offset);
+        return $this->__get($offset);
     }
 
     /**
@@ -68,7 +89,7 @@ class Registry implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function offsetSet($offset, $value)
     {
-        $this->set($offset, $value);
+        $this->__set($offset, $value);
     }
 
     /**
@@ -77,7 +98,7 @@ class Registry implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function offsetExists($offset)
     {
-        return isset($this->registry[strtolower($offset)]);
+        $this->__isset($offset);
     }
 
     /**
@@ -85,7 +106,7 @@ class Registry implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function offsetUnset($offset)
     {
-        unset($this->registry[strtolower($offset)]);
+        $this->__unset($offset);
     }
 
     /**

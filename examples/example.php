@@ -4,23 +4,17 @@ namespace OtherCode\Examples;
 
 require_once "../autoload.php";
 
-/**
- * Class Dummy
- */
+
 class DummyOne extends \OtherCode\FController\Modules\BaseModule
 {
     public function sayHello($name)
     {
         $this->storage->name = $name;
         $this->messages->addMessage('bla bla');
-        var_dump($this->messages);
         return "Hello, " . $this->storage->name . "!";
     }
 }
 
-/**
- * Class Dummy
- */
 class DummyTwo extends \OtherCode\FController\Modules\BaseModule
 {
     public function sayGoodBye()
@@ -29,11 +23,21 @@ class DummyTwo extends \OtherCode\FController\Modules\BaseModule
     }
 }
 
+class Calc
+{
+    public function sum($a, $b)
+    {
+        return $a + $b;
+    }
+}
+
 /**
  * First we get a controller instance, the we
  * register the modules into it
  */
 $ctrl = \OtherCode\FController\FController::getInstance();
+
+$ctrl->setLibrary('calc','OtherCode\Examples\Calc');
 $ctrl->setModule('dummy1', 'OtherCode\Examples\DummyOne');
 $ctrl->setModule('dummy2', 'OtherCode\Examples\DummyTwo');
 
@@ -41,11 +45,14 @@ try {
 
     $data = array('name' => 'Rick');
 
-    $response = $ctrl->run("dummy1.sayHello", $data);
-    var_dump($response);
+    $response1 = $ctrl->run("dummy1.sayHello", $data);
+    $response2 = $ctrl->run("dummy2.sayGoodBye");
 
-    $response = $ctrl->run("dummy2.sayGoodBye");
-    var_dump($response);
+    foreach ($ctrl->getMessages() as $message){
+        print($message);
+    }
+
+    var_dump($response1, $response2);
 
 } catch (\Exception $e) {
 
