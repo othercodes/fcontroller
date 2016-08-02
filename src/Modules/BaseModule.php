@@ -62,19 +62,4 @@ abstract class BaseModule
     {
         return $this->libraries->$name;
     }
-
-    /**
-     * Prevent the accidentally library override.
-     * @param string $name
-     * @param mixed $value
-     * @throws \OtherCode\FController\Exceptions\FControllerException
-     */
-    public function __set($name, $value)
-    {
-        if (isset($this->libraries->$name)) {
-            throw new \OtherCode\FController\Exceptions\FControllerException('Invalid library override, the "' . $name . '" property is already in use');
-        }
-
-        $this->libraries->$name = $value;
-    }
 }

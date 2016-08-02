@@ -4,7 +4,10 @@ namespace OtherCode\Examples;
 
 require_once "../autoload.php";
 
-
+/**
+ * Class DummyOne. Module 1
+ * @package OtherCode\Examples
+ */
 class DummyOne extends \OtherCode\FController\Modules\BaseModule
 {
     public function sayHello($name)
@@ -15,6 +18,10 @@ class DummyOne extends \OtherCode\FController\Modules\BaseModule
     }
 }
 
+/**
+ * Class DummyTwo. Module 2
+ * @package OtherCode\Examples
+ */
 class DummyTwo extends \OtherCode\FController\Modules\BaseModule
 {
     public function sayGoodBye()
@@ -24,6 +31,10 @@ class DummyTwo extends \OtherCode\FController\Modules\BaseModule
     }
 }
 
+/**
+ * Class Calc. Library 1
+ * @package OtherCode\Examples
+ */
 class Calc
 {
     public function sum($a, $b)

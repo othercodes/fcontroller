@@ -164,7 +164,7 @@ abstract class Core
     /**
      * Perform the main call of the module method
      * @param string $path
-     * @param mixed|null $data
+     * @param object|array|null $data
      * @return mixed
      */
     public function run($path, $data = null)
