@@ -23,16 +23,35 @@ class Dummy extends \OtherCode\FController\Modules\BaseModule
         $this->messages->addMessage('Message 5', 'warning');
     }
 
-    public function putStuff($stuff){
-        $this->storage->stuff = $stuff;
+    public function putStuff($stuff, $value)
+    {
+        $this->storage->$stuff = $value;
     }
 }
 
 class Smart extends \OtherCode\FController\Modules\BaseModule
 {
-    public function getStuff()
+    public function getStuff($stuff)
     {
-        return $this->storage->stuff;
+        return $this->storage->$stuff;
+    }
+
+    public function get($library)
+    {
+        return $this->$library;
+    }
+}
+
+class SampleLibrary
+{
+    public function getOne()
+    {
+        return 1;
+    }
+
+    public function getTwo()
+    {
+        return 2;
     }
 }
 
@@ -63,6 +82,15 @@ class FControllerTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends testInstantiation
      */
+    public function testGetExistingLibrary(\OtherCode\FController\FController $ctrl)
+    {
+        $ctrl->setLibrary('sampleLibrary', '\OtherCode\Test\SampleLibrary');
+        $this->assertInstanceOf('\OtherCode\Test\SampleLibrary', $ctrl->getLibraryInstance('sampleLibrary'));
+    }
+
+    /**
+     * @depends testInstantiation
+     */
     public function testWrongGetLibraryNewInstance(\OtherCode\FController\FController $ctrl)
     {
         $this->assertNull($ctrl->getLibraryNewInstance('Non-existentLibary'));
@@ -74,6 +102,17 @@ class FControllerTest extends \PHPUnit_Framework_TestCase
     public function testWrongGetLibraryInstance(\OtherCode\FController\FController $ctrl)
     {
         $this->assertNull($ctrl->getLibraryInstance('Non-existentLibary'));
+    }
+
+    /**
+     * @depends testInstantiation
+     */
+    public function testCustomModuleLibraryAccess(\OtherCode\FController\FController $ctrl)
+    {
+        $ctrl->setModule('smart', '\OtherCode\Test\Smart');
+        $this->assertNotNull($ctrl->run('smart.get', array('sampleLibrary')));
+        $this->assertNull($ctrl->run('smart.get', array('nonSampleLibrary')));
+
     }
 
     /**
@@ -108,12 +147,15 @@ class FControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testStore(\OtherCode\FController\FController $ctrl)
     {
-        $ctrl->setModule('smart', '\OtherCode\Test\Smart');
 
-        $ctrl->run('dummy.putStuff', array('This is some stuff'));
-        $stuff = $ctrl->run('smart.getStuff');
+
+        $ctrl->run('dummy.putStuff', array('stuff', 'This is some stuff'));
+        $stuff = $ctrl->run('smart.getStuff', array('stuff'));
 
         $this->assertSame($stuff, 'This is some stuff');
+
+        $inexistentStuff = $ctrl->run('smart.getStuff', array('inexistentStuff'));
+        $this->assertNull($inexistentStuff);
     }
 
 }

@@ -60,6 +60,9 @@ abstract class BaseModule
      */
     public function __get($name)
     {
-        return $this->libraries->$name;
+        if (isset($this->libraries->$name)) {
+            return $this->libraries->$name;
+        }
+        return null;
     }
 }

@@ -2,54 +2,16 @@
 
 namespace OtherCode\Examples;
 
-require_once "../autoload.php";
+require_once '../autoload.php';
+
+require_once 'DummyOne.php';
+require_once 'DummyTwo.php';
 
 /**
- * Class DummyOne. Module 1
- * @package OtherCode\Examples
- */
-class DummyOne extends \OtherCode\FController\Modules\BaseModule
-{
-    public function sayHello($name)
-    {
-        $this->storage->name = $name;
-        $this->messages->addMessage('bla bla from dummy 1');
-        return "Hello, " . $this->storage->name . "!";
-    }
-}
-
-/**
- * Class DummyTwo. Module 2
- * @package OtherCode\Examples
- */
-class DummyTwo extends \OtherCode\FController\Modules\BaseModule
-{
-    public function sayGoodBye()
-    {
-        $this->messages->addMessage('bla bla from dummy 2','warning');
-        return "GoodBye, " . $this->storage->name . "!";
-    }
-}
-
-/**
- * Class Calc. Library 1
- * @package OtherCode\Examples
- */
-class Calc
-{
-    public function sum($a, $b)
-    {
-        return $a + $b;
-    }
-}
-
-/**
- * First we get a controller instance, the we
- * register the modules into it
+ * First we get a controller instance,
+ * then we register the modules into it.
  */
 $ctrl = \OtherCode\FController\FController::getInstance();
-
-$ctrl->setLibrary('calc', 'OtherCode\Examples\Calc');
 $ctrl->setModule('dummy1', 'OtherCode\Examples\DummyOne');
 $ctrl->setModule('dummy2', 'OtherCode\Examples\DummyTwo');
 
@@ -57,16 +19,29 @@ try {
 
     $data = array('name' => 'Rick');
 
+    /**
+     * execute two methods for each of them
+     * from one different module.
+     */
     $response1 = $ctrl->run("dummy1.sayHello", $data);
     $response2 = $ctrl->run("dummy2.sayGoodBye");
 
+    /**
+     * retrieve and dump all messages.
+     */
     foreach ($ctrl->getMessages() as $message) {
         var_dump($message);
     }
 
+    /**
+     * dump the responses.
+     */
     var_dump($response1, $response2);
 
 } catch (\Exception $e) {
 
+    /**
+     * In case of any exception we control it
+     */
     var_dump($e);
 }
