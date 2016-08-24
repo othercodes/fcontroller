@@ -2,9 +2,13 @@
 
 [![Build Status](https://travis-ci.org/othercodes/fcontroller.svg?branch=master)](https://travis-ci.org/othercodes/fcontroller) [![Latest Stable Version](https://poser.pugx.org/othercode/fcontroller/v/stable)](https://packagist.org/packages/othercode/fcontroller) [![License](https://poser.pugx.org/othercode/fcontroller/license)](https://packagist.org/packages/othercode/fcontroller)
 
-Advanced front controller and registry that allow us to use several modules with only one entry point or interface. 
+FController is a container for controllers/modules. This package allow us to register several controllers/modules 
+that can be called in a simply way from a common entry point. In the same way we can register multiple libraries 
+or services. These services or libraries will be available in all modules. 
 
 ## Installation
+
+### With Composer
 
 First we have to add the dependencies to the ***composer.json*** file:
 
@@ -19,57 +23,76 @@ Then we have to run the following command:
 composer update
 ```
 
+### Stand Alone
+
+We need to download the package, then extract the content and include in your code the `fcontroller/autoload.php` file.
+
+```
+require_once 'fcontroller/autoload.php';
+```
+
 ## Basic Usage
 
 First of all we must have the modules we want to the FController handle. For example we have this two dummy modules (classes):
 
-#### DummyOne
 ```
-class DummyOne
+namespace OtherCode\Examples;
+
+class DummyOne extends \OtherCode\FController\Modules\BaseModule
 {
-
-	public function __construct()
-	{
-		//do something
-	}
-
-	public function sayHello($name = "World")
-	{
-		return "Hello, ".$name."!";
-	}
-
-	public function sayGoodBye($name = "World")
-	{
-		return "GoodBye, ".$name."!";
-	}
-
+    public function sayHello($name)
+    {
+        $this->storage->name = $name;
+        
+        return "Hello, " . $name . "!";
+    }
 }
 ```
 
-#### DummyTwo
+The DummyOne Module has one method `sayHello($name)` that accepts one string as parameter. This method return us a string.
+
 ```
-use DateTime;
+namespace OtherCode\Examples;
 
-class DummyTwo
+class DummyTwo extends \OtherCode\FController\Modules\BaseModule
 {
-
-	public function __construct()
-	{
-		//do something
-	}
-
-	public function whatTimeIsIt()
-	{
-		$now = new DateTime("now");
-		return $now->format("H:i:s");
-	}
-	
-	public function whatDayIsIt()
-	{
-		$today = new DateTime("now");
-        return $today->format("Y-m-d");
-	}
-
+    public function sayGoodBye()
+    {
+        return "GoodBye, " . $this->storage->name . "!";
+    }
 }
 ```
+
+The DummyTwo Module has once again only one method named `sayGoodBye()`, this method also, return us a string.
+
+Lets create a simply application that holds our two modules:
+
+```
+namespace OtherCode\Examples;
+
+require_once 'fcontroller/autoload.php';
+require_once 'DummyOne.php';
+require_once 'DummyTwo.php';
+
+$app = \OtherCode\FController\FController::getInstance();
+$app->setModule('dummy1', 'OtherCode\Examples\DummyOne');
+$app->setModule('dummy2', 'OtherCode\Examples\DummyTwo');
+
+try {
+
+    $response1 = $app->run("dummy1.sayHello", array('name' => 'Rick'));
+    $response2 = $app->run("dummy2.sayGoodBye");
+
+    var_dump($response1, $response2);
+
+} catch (\Exception $e) {
+
+    var_dump($e);
+}
+```
+
+The code above illustrate how we can call two different modules using one entry point. Also we can use 
+services inside our modules. 
+
+This package also has a message queue that can be used to display informative messages from our modules.
 

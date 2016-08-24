@@ -2,7 +2,7 @@
   "name": "othercode/fcontroller",
   "type": "library",
   "license": "MIT",
-  "description": "Front controller that allow you to run different API modules.",
+  "description": "FController is a container for controllers/modules.",
   "authors": [
     {
       "name": "David Unay Santisteban",
