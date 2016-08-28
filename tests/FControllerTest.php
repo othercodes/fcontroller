@@ -14,6 +14,11 @@ class Dummy extends \OtherCode\FController\Modules\BaseModule
         return "GoodBye, " . $name . "!";
     }
 
+    public function getFortyTwoFromService()
+    {
+        return $this->fortytwo;
+    }
+
     public function sendMessage()
     {
         $this->messages->addMessage('Message 1');
@@ -112,12 +117,11 @@ class FControllerTest extends \PHPUnit_Framework_TestCase
         $ctrl->setModule('smart', '\OtherCode\Test\Smart');
         $this->assertNotNull($ctrl->run('smart.get', array('sampleLibrary')));
         $this->assertNull($ctrl->run('smart.get', array('nonSampleLibrary')));
-
     }
 
     /**
      * @depends testInstantiation
-     * @expectedException \OtherCode\FController\Exceptions\FControllerException
+     * @expectedException \OtherCode\FController\Exceptions\NotFoundException
      */
     public function testException(\OtherCode\FController\FController $ctrl)
     {
@@ -130,15 +134,12 @@ class FControllerTest extends \PHPUnit_Framework_TestCase
     public function testMessages(\OtherCode\FController\FController $ctrl)
     {
         $ctrl->run('dummy.sendMessage');
-
         foreach ($ctrl->getMessages() as $message) {
-
             $this->assertInstanceOf('\OtherCode\FController\Components\Messages\Message', $message);
             $this->assertInternalType('string', $message->type);
             $this->assertInternalType('string', $message->text);
             $this->assertInternalType('string', (string)$message);
             $this->assertContains($message->type, array('info', 'notice', 'error', 'warning'));
-
         }
     }
 
@@ -147,8 +148,6 @@ class FControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testStore(\OtherCode\FController\FController $ctrl)
     {
-
-
         $ctrl->run('dummy.putStuff', array('stuff', 'This is some stuff'));
         $stuff = $ctrl->run('smart.getStuff', array('stuff'));
 
@@ -156,6 +155,28 @@ class FControllerTest extends \PHPUnit_Framework_TestCase
 
         $inexistentStuff = $ctrl->run('smart.getStuff', array('inexistentStuff'));
         $this->assertNull($inexistentStuff);
+    }
+
+    /**
+     * @depends testInstantiation
+     */
+    public function testServiceClosureService(\OtherCode\FController\FController $ctrl)
+    {
+        $ctrl->setService('fortytwo',function(){
+            return 42;
+        });
+        $this->assertSame($ctrl->run('dummy.getFortyTwoFromService'), 42);
+    }
+
+    /**
+     * @depends testInstantiation
+     */
+    public function testGetServiceClosure(\OtherCode\FController\FController $ctrl)
+    {
+        $service = $ctrl->getServiceInstance('fortytwo');
+
+        $this->assertInstanceOf('\Closure', $service);
+        $this->assertSame($service(), 42);
     }
 
 }

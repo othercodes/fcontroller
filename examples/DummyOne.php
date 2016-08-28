@@ -32,6 +32,6 @@ class DummyOne extends \OtherCode\FController\Modules\BaseModule
         /**
          * Finally perform custom sample code.
          */
-        return "Hello, " . $name . "!";
+        return "Hello, " . $name . " at " . $this->date->format('Y-m-d H:i:s');
     }
 }

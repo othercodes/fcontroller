@@ -15,6 +15,16 @@ class Registry implements \ArrayAccess, \Countable, \IteratorAggregate
     private $registry = array();
 
     /**
+     * Return true if the identifier exists, false if not
+     * @param string $name
+     * @return bool
+     */
+    public function has($name)
+    {
+        return $this->__isset($name);
+    }
+
+    /**
      * @param $name
      * @param $value
      */

@@ -59,62 +59,90 @@ class FController extends \OtherCode\FController\Core\Core
     }
 
     /**
-     * Set and register a new library
+     * Set and register a new services
      * @param string $name
-     * @param string $library
+     * @param mixed $service
      * @param mixed $parameters
      * @return $this
      */
-    public function setLibrary($name, $library, $parameters = null)
+    public function setService($name, $service, $parameters = null)
     {
         $name = strtolower($name);
+        if ($service instanceof \Closure) {
 
-        if (class_exists($library, true)) {
+            /**
+             * Save directly the service in the
+             * container.
+             */
+            $this->registerService($name, $service);
+
+        } elseif (class_exists($service, true)) {
 
             /**
              * instantiation and initialization of
-             * each module, return true on success
+             * each service, return true on success
              * and false on error
              */
-            $instance = new $library($parameters);
-            $this->registerLibrary($name, $instance);
+            $this->registerService($name, new $service($parameters));
         }
         return $this;
-
     }
 
     /**
-     * Get a new instance of the requested library.
-     * @param $library string Library name
-     * @return null|object Library instance or false in case of fail.
-     * @deprecated Will be removed on v2
+     * Legacy
+     * @param string $name
+     * @param string $service
+     * @param mixed $parameters
+     * @return $this
      */
-    public function getLibraryNewInstance($library)
+    public function setLibrary($name, $service, $parameters = null)
     {
-        return $this->getLibraryInstance($library, true);
+        return $this->setService($name, $service, $parameters);
     }
 
     /**
-     * Get a instance of the requested library.
-     * @param $library string Library name
+     * Get a instance of the requested service.
+     * @param $service string Service name
      * @param $new boolean true to get a new instance
-     * @return null|object Library instance or false in case of fail.
+     * @return null|object Service instance or false in case of fail.
      */
-    public function getLibraryInstance($library, $new = false)
+    public function getServiceInstance($service, $new = false)
     {
         /**
-         * we check if the requested library exists
+         * we check if the requested service exists
          * if is does we return a new instance of the
-         * the library.
+         * the service.
          */
-        if (isset($this->libraries->$library)) {
+        if (isset($this->services->$service)) {
             if ($new === true) {
-                return clone $this->libraries->$library;
+                return clone $this->services->$service;
             } else {
-                return $this->libraries->$library;
+                return $this->services->$service;
             }
         }
         return null;
+    }
+
+    /**
+     * Legacy
+     * @param $service
+     * @return null|object
+     * @deprecated Will be removed in version 2.0
+     */
+    public function getLibraryNewInstance($service)
+    {
+        return $this->getServiceInstance($service, true);
+    }
+
+    /**
+     * Legacy
+     * @param $service
+     * @return null|object
+     * @deprecated Will be removed in version 2.0
+     */
+    public function getLibraryInstance($service)
+    {
+        return $this->getServiceInstance($service);
     }
 
 }

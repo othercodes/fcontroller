@@ -22,10 +22,10 @@ abstract class Core
     protected $modules = array();
 
     /**
-     * The registry of all libraries
-     * @var \OtherCode\FController\Components\Libraries
+     * The registry of all services
+     * @var \OtherCode\FController\Components\Services
      */
-    protected $libraries;
+    protected $services;
 
     /**
      * Shared store space.
@@ -46,38 +46,38 @@ abstract class Core
     {
 
         $this->storage = new \OtherCode\FController\Components\Registry();
-        $this->libraries = new \OtherCode\FController\Components\Libraries(array(
+        $this->services = new \OtherCode\FController\Components\Services(array(
             'rest' => '\OtherCode\Rest\Rest'
         ));
 
         $this->messages = new \OtherCode\FController\Components\Messages();
 
         /**
-         * foreach default library we have to
+         * foreach default service we have to
          * perform the complete registration
          */
-        foreach ($this->libraries as $name => $library) {
+        foreach ($this->services as $name => $service) {
 
             /**
              * if the name is used we check if the
-             * body of the library is a string we have
-             * to replace it with a instance of the library
+             * body of the service is a string we have
+             * to replace it with a instance of the service
              */
-            if (is_string($this->libraries->$name)) {
+            if (is_string($this->services->$name)) {
 
                 /**
                  * finally we check if the string is actually  a valid class name, if
-                 * it is, we create a new instance of the library, otherwise we delete
+                 * it is, we create a new instance of the service, otherwise we delete
                  * that entry to avoid malfunctions
                  */
-                unset($this->libraries->$name);
+                unset($this->services->$name);
 
-                if (class_exists($library)) {
+                if (class_exists($service)) {
                     /**
-                     * Finally instantiate and register the library
+                     * Finally instantiate and register the service
                      */
-                    $instance = new $library();
-                    $this->registerLibrary($name, $instance);
+                    $instance = new $service();
+                    $this->registerService($name, $instance);
 
                 }
             }
@@ -97,7 +97,7 @@ abstract class Core
         $name = strtolower($name);
 
         if (!array_key_exists($name, $this->modules)) {
-            $module->connect($this->libraries, $this->storage, $this->messages);
+            $module->connect($this->services, $this->storage, $this->messages);
             $this->modules[$name] = $module;
             return true;
         }
@@ -120,33 +120,33 @@ abstract class Core
     }
 
     /**
-     * Register and instantiate a new library
+     * Register and instantiate a new service
      * @param string $name string
-     * @param object $library
+     * @param object $service
      * @return boolean
      */
-    protected function registerLibrary($name, $library)
+    protected function registerService($name, $service)
     {
         $name = strtolower($name);
 
-        if (!isset($this->libraries->$name)) {
-            $this->libraries->$name = $library;
+        if (!isset($this->services->$name)) {
+            $this->services->$name = $service;
             return true;
         }
         return false;
     }
 
     /**
-     * Un register a library
+     * Un register a service
      * @param string $name
      * @return boolean
      */
-    public function unregisterLibrary($name)
+    public function unregisterService($name)
     {
         $name = strtolower($name);
 
-        if (isset($this->libraries->$name)) {
-            unset($this->libraries->$name);
+        if (isset($this->services->$name)) {
+            unset($this->services->$name);
             return true;
         }
         return false;
@@ -205,6 +205,7 @@ abstract class Core
      * @param $path
      * @return object
      * @throws \OtherCode\FController\Exceptions\FControllerException
+     * @throws \OtherCode\FController\Exceptions\NotFoundException
      */
     protected function route($path)
     {
@@ -230,7 +231,7 @@ abstract class Core
          * call is available
          */
         if (!array_key_exists($module, $this->modules)) {
-            throw new \OtherCode\FController\Exceptions\FControllerException("Module instance not found", 404);
+            throw new \OtherCode\FController\Exceptions\NotFoundException("Module instance not found", 404);
         }
 
         /**
@@ -238,7 +239,7 @@ abstract class Core
          * in the module
          */
         if (!method_exists($this->modules[$module], $method)) {
-            throw new \OtherCode\FController\Exceptions\FControllerException("Method module requested is not available", 405);
+            throw new \OtherCode\FController\Exceptions\NotFoundException("Module method requested is not available", 405);
         }
 
         /**

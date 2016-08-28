@@ -12,8 +12,14 @@ require_once 'DummyTwo.php';
  * then we register the modules into it.
  */
 $ctrl = \OtherCode\FController\FController::getInstance();
+
+$ctrl->setService('date', function () {
+    return new \DateTime("now");
+});
+
 $ctrl->setModule('dummy1', 'OtherCode\Examples\DummyOne');
 $ctrl->setModule('dummy2', 'OtherCode\Examples\DummyTwo');
+
 
 try {
 
