@@ -12,14 +12,14 @@ or services. These services or libraries will be available in all modules.
 
 First we have to add the dependencies to the ***composer.json*** file:
 
-```
+```javascrip
 "require": {
     "othercode/fcontroller": "*",
 }
 ```
 Then we have to run the following command:
 
-```
+```bash
 composer update
 ```
 
@@ -27,7 +27,7 @@ composer update
 
 We need to download the package, then extract the content and include in your code the `fcontroller/autoload.php` file.
 
-```
+```php
 require_once 'fcontroller/autoload.php';
 ```
 
@@ -35,7 +35,7 @@ require_once 'fcontroller/autoload.php';
 
 First of all we must have the modules we want to the FController handle. For example we have this two dummy modules (classes):
 
-```
+```php
 namespace OtherCode\Examples;
 
 class DummyOne extends \OtherCode\FController\Modules\BaseModule
@@ -51,7 +51,7 @@ class DummyOne extends \OtherCode\FController\Modules\BaseModule
 
 The DummyOne Module has one method `sayHello($name)` that accepts one string as parameter. This method return us a string.
 
-```
+```php
 namespace OtherCode\Examples;
 
 class DummyTwo extends \OtherCode\FController\Modules\BaseModule
@@ -67,7 +67,7 @@ The DummyTwo Module has once again only one method named `sayGoodBye()`, this me
 
 Lets create a simply application that holds our two modules:
 
-```
+```php
 namespace OtherCode\Examples;
 
 require_once 'fcontroller/autoload.php';
