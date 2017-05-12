@@ -60,7 +60,7 @@ class SampleLibrary
     }
 }
 
-class FControllerTest extends \PHPUnit_Framework_TestCase
+class FControllerTest extends \PHPUnit\Framework\TestCase
 {
 
     public function testInstantiation()
