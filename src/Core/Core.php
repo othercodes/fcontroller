@@ -29,7 +29,7 @@ abstract class Core
 
     /**
      * Shared store space.
-     * @var \OtherCode\FController\Components\Registry
+     * @var \OtherCode\FController\Core\Container
      */
     protected $storage;
 
@@ -44,46 +44,9 @@ abstract class Core
      */
     protected function __construct()
     {
-
-        $this->storage = new \OtherCode\FController\Components\Registry();
-        $this->services = new \OtherCode\FController\Components\Services(array(
-            'rest' => '\OtherCode\Rest\Rest'
-        ));
-
+        $this->storage = new \OtherCode\FController\Core\Container();
+        $this->services = new \OtherCode\FController\Components\Services();
         $this->messages = new \OtherCode\FController\Components\Messages();
-
-        /**
-         * foreach default service we have to
-         * perform the complete registration
-         */
-        foreach ($this->services as $name => $service) {
-
-            /**
-             * if the name is used we check if the
-             * body of the service is a string we have
-             * to replace it with a instance of the service
-             */
-            if (is_string($this->services->$name)) {
-
-                /**
-                 * finally we check if the string is actually  a valid class name, if
-                 * it is, we create a new instance of the service, otherwise we delete
-                 * that entry to avoid malfunctions
-                 */
-                unset($this->services->$name);
-
-                if (class_exists($service)) {
-                    /**
-                     * Finally instantiate and register the service
-                     */
-                    $instance = new $service();
-                    $this->registerService($name, $instance);
-
-                }
-            }
-
-        }
-
     }
 
     /**

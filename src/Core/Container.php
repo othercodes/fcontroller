@@ -1,18 +1,18 @@
 <?php
 
-namespace OtherCode\FController\Components;
+namespace OtherCode\FController\Core;
 
 /**
- * Class Registry
+ * Class Container
  * @package OtherCode\FController\Components
  */
-class Registry implements \ArrayAccess, \Countable, \IteratorAggregate
+class Container implements \Psr\Container\ContainerInterface, \ArrayAccess, \Countable, \IteratorAggregate
 {
     /**
      * Messages
      * @var array
      */
-    private $registry = array();
+    private $container = array();
 
     /**
      * Return true if the identifier exists, false if not
@@ -48,10 +48,10 @@ class Registry implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function __set($name, $value)
     {
-        if(is_null($name)){
-            $this->registry[] = $value;
+        if (is_null($name)) {
+            $this->container[] = $value;
         } else {
-            $this->registry[strtolower($name)] = $value;
+            $this->container[strtolower($name)] = $value;
         }
     }
 
@@ -61,8 +61,8 @@ class Registry implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function __get($name)
     {
-        if (isset($this->registry[strtolower($name)])) {
-            return $this->registry[strtolower($name)];
+        if (isset($this->container[strtolower($name)])) {
+            return $this->container[strtolower($name)];
         }
         return null;
     }
@@ -72,7 +72,7 @@ class Registry implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function __unset($name)
     {
-        unset($this->registry[strtolower($name)]);
+        unset($this->container[strtolower($name)]);
     }
 
     /**
@@ -81,7 +81,7 @@ class Registry implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function __isset($name)
     {
-        return isset($this->registry[strtolower($name)]);
+        return isset($this->container[strtolower($name)]);
     }
 
     /**
@@ -108,7 +108,7 @@ class Registry implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function offsetExists($offset)
     {
-        $this->__isset($offset);
+        return $this->__isset($offset);
     }
 
     /**
@@ -122,8 +122,9 @@ class Registry implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * @return \ArrayIterator
      */
-    public function getIterator() {
-        return new \ArrayIterator($this->registry);
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->container);
     }
 
     /**
@@ -131,6 +132,6 @@ class Registry implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function count()
     {
-        return count($this->registry);
+        return count($this->container);
     }
 }

@@ -7,7 +7,7 @@ namespace OtherCode\FController\Components;
  * Class Messages
  * @package OtherCode\FController\Components
  */
-class Messages extends \OtherCode\FController\Components\Registry
+class Messages extends \OtherCode\FController\Core\Container
 {
     /**
      * Add a new message to the queue

@@ -2,7 +2,7 @@
 
 namespace OtherCode\Examples;
 
-require_once '../autoload.php';
+require_once '../vendor/autoload.php';
 
 require_once 'DummyOne.php';
 require_once 'DummyTwo.php';

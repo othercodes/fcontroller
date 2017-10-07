@@ -20,7 +20,7 @@ abstract class BaseModule
 
     /**
      * Shared store space.
-     * @var \OtherCode\FController\Components\Registry
+     * @var \OtherCode\FController\Core\Container
      */
     protected $storage;
 
@@ -34,10 +34,10 @@ abstract class BaseModule
      * Load the services into the module if they have
      * not loaded already
      * @param \OtherCode\FController\Components\Services $services
-     * @param \OtherCode\FController\Components\Registry $storage
+     * @param \OtherCode\FController\Core\Container $storage
      * @param \OtherCode\FController\Components\Messages $messages
      */
-    public function connect(\OtherCode\FController\Components\Services $services, \OtherCode\FController\Components\Registry $storage, \OtherCode\FController\Components\Messages $messages)
+    public function connect(\OtherCode\FController\Components\Services $services, \OtherCode\FController\Core\Container $storage, \OtherCode\FController\Components\Messages $messages)
     {
         if (!isset($this->services)) {
             $this->services = $services;

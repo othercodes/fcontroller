@@ -89,24 +89,12 @@ class FController extends \OtherCode\FController\Core\Core
     }
 
     /**
-     * Legacy
-     * @param string $name
-     * @param string $service
-     * @param mixed $parameters
-     * @return $this
-     */
-    public function setLibrary($name, $service, $parameters = null)
-    {
-        return $this->setService($name, $service, $parameters);
-    }
-
-    /**
      * Get a instance of the requested service.
      * @param $service string Service name
      * @param $new boolean true to get a new instance
      * @return null|object Service instance or false in case of fail.
      */
-    public function getServiceInstance($service, $new = false)
+    public function getService($service, $new = false)
     {
         /**
          * we check if the requested service exists
@@ -121,28 +109,6 @@ class FController extends \OtherCode\FController\Core\Core
             }
         }
         return null;
-    }
-
-    /**
-     * Legacy
-     * @param $service
-     * @return null|object
-     * @deprecated Will be removed in version 2.0
-     */
-    public function getLibraryNewInstance($service)
-    {
-        return $this->getServiceInstance($service, true);
-    }
-
-    /**
-     * Legacy
-     * @param $service
-     * @return null|object
-     * @deprecated Will be removed in version 2.0
-     */
-    public function getLibraryInstance($service)
-    {
-        return $this->getServiceInstance($service);
     }
 
 }

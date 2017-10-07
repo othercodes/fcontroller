@@ -7,7 +7,7 @@ namespace OtherCode\FController\Components;
  * Class Services
  * @package OtherCode\FController\Components
  */
-class Services extends \OtherCode\FController\Components\Registry
+class Services extends \OtherCode\FController\Core\Container
 {
     /**
      * Libraries constructor.
